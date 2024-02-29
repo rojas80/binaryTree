@@ -14,7 +14,7 @@ class binarySearchTree{
     }
     //build tree
     buildTree(listOfElements){
-        let sortedArrayList = [... new Set(listOfElements)].sort((a,b) => a-b);
+        let sortedArrayList = [... new Set(listOfElements)].sort((a,b) => a - b);
         this._insert(sortedArrayList);
     }   
     _insert(sortedArrayList){
@@ -62,7 +62,42 @@ class binarySearchTree{
         }
     }
 
-    //
+    deleteNode(value, root = this.root){
+        if(root === null){
+            return  null;
+        }   
+        //locate value node in the tree
+        if(root.value > value){// value located  on left subtree
+            root.left =  this.deleteNode(value, root.left);
+            return root;
+        }
+        else if(root.value < value){//value located on right  subtree
+            root.right  = this.deleteNode(value, root.right);
+            return root;
+        }
+
+        if(root.left === null && root.right === null){
+            return null;//node has no child
+        }
+        else if(root.left === null){//node has one child
+            return root.right;
+        }
+        else if(root.right === null){
+            return root.left;
+        }
+        else{//node has two children
+            let minValue = this._findMinValue(root.right);
+            root.value = minValue;
+            root.right = this.deleteNode(minValue, root.right);//delete minimum node in the subright tree
+            return root;
+        }
+    }
+    _findMinValue(node){
+        while(node.left !== null){
+            node = node.left
+        }
+        return node.value;
+    }
     
      //display
     inoderTraversal(node = this.root){
@@ -75,28 +110,10 @@ class binarySearchTree{
 
 }
 
-
 let x =[1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-//x = [... new Set(x)].sort((a,b) => a-b)
 const test = new binarySearchTree();
 test.buildTree(x);
 test.inoderTraversal();
-//mergeSort(x);
+console.log(test.deleteNode(8));
+test.inoderTraversal();
 
-
-
-
-
-// function mergeSort(list){
-//     if(list.length < 1){
-//         return;
-//     }
-//     let mid = Math.floor(list.length / 2);
-//     let left = list.slice(0,mid);
-//     let right = list.slice(mid);
-//     console.log("mid num", list[mid]);
-//     console.log('mid: ', mid);
-//     console.log('left: ', left);
-//     console.log("right: ", right);
-//     return mergeSort(left);
-// }
